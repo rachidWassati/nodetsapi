@@ -1,5 +1,5 @@
-import express, { Router } from "express"
-import { createRestaurant, getRestaurantById, getRestaurants } from "../controllers"
+import express from "express"
+import { createRestaurant, getRestaurantById, getRestaurants } from "../../controllers/v1"
 
 const router = express.Router()
 

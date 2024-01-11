@@ -1,8 +1,8 @@
 import express from 'express';
-import { AdminRoute, RestaurantRoute } from './routes';
 import mongoose from 'mongoose';
 import { MONGO_URI } from './config/dbConnection';
 import { errorHandler } from './middlewares';
+import { apiRoute } from './routes/api.routes';
 
 const app = express();
 
@@ -12,8 +12,7 @@ mongoose.connect(MONGO_URI)
 
 app.use(express.json())
 
-app.use('/admin', AdminRoute)
-app.use('/restaurant', RestaurantRoute)
+app.use('/api', apiRoute)
 
 app.use(errorHandler);
 
