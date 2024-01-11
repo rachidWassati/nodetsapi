@@ -6,9 +6,9 @@ import { generateSalt, hashPassword } from "../../utility";
 
 export const findRestaurant = async (id: string | undefined, email?: string) => {
     if(email) {
-        return Restaurant.findOne({email}).exec();
+        return Restaurant.findOne({email}).populate('foods').exec();
     }
-    return Restaurant.findById(id).exec();
+    return Restaurant.findById(id).populate('foods').exec();
 }
 
 export const createRestaurant = async (req: Request, res: Response, next: NextFunction) => {

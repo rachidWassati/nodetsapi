@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { EditRestaurantInputs, LoginRestaurantInputs } from "../../dto";
+import { CreateFoodInputs, EditRestaurantInputs, LoginRestaurantInputs } from "../../dto";
 import { findRestaurant } from "./admin.controllers";
 import { generateSignature, isValidatePassword } from "../../utility";
 import { Restaurant } from "../../models";
+import { Food } from "../../models/Food";
 
 
 export const restaurantLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -68,6 +69,42 @@ export const updateServiceAvailable = async (req: Request, res: Response, next: 
                 const updatedRestaurant = await restaurant.save();
 
                 return res.status(200).json({success: true, data: updatedRestaurant, error: null})
+            }
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const createFood = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.user
+
+        if(user) {
+            const body = <CreateFoodInputs>req.body;
+            const restaurant = await findRestaurant(user._id)
+
+            if(restaurant) {
+                const createdFood = await Food.create({...body, restaurantId: restaurant._id})
+                restaurant.foods.push(createdFood._id)
+                await restaurant.save()
+
+                return res.status(201).json({success: true, data: createdFood, error: null})
+            }
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getFoods = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.user;
+        if(user) {
+            const restaurant = await findRestaurant(user._id);
+
+            if(restaurant) {
+                return res.status(200).json({success: true, data: restaurant.foods, error: null })
             }
         }
     } catch (error) {

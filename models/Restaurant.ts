@@ -15,7 +15,7 @@ interface RestaurantDoc extends Document {
     serviceAvailable: boolean;
     coverImages: [string];
     rating: number;
-    foods: [any];
+    foods: [Schema.Types.ObjectId];
 }
 
 // Je creer un schema
@@ -32,7 +32,7 @@ const RestaurantSchema = new Schema<RestaurantDoc>({
     serviceAvailable: {type: Boolean, default: false},
     coverImages: {type: [String], default: []},
     rating: {type: Number, default: 0.0},
-    foods: {type: [String], default: []},
+    foods: {type: [Schema.Types.ObjectId], ref : 'food', default: []},
 }, {
     timestamps: true,
     toJSON: {
