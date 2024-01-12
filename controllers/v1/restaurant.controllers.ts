@@ -58,6 +58,27 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     }
 }
 
+export const updateCoverImages = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = req.user;
+
+        if(user) {
+            const restaurant = await findRestaurant(user._id);
+
+            if(restaurant) {
+                const files = req.files as [Express.Multer.File];
+                const images = files?.map((file: Express.Multer.File) => file.filename)
+                restaurant.coverImages.push(...images)
+                const updatedRestaurant = await restaurant.save();
+
+                return res.status(200).json({success: true, data: updatedRestaurant, error: null})
+            }
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const updateServiceAvailable = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.user;
@@ -79,13 +100,15 @@ export const updateServiceAvailable = async (req: Request, res: Response, next: 
 export const createFood = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = req.user
+        const files = req.files as [Express.Multer.File]
+        const images = files?.map((file: Express.Multer.File) => file.filename)
 
         if(user) {
             const body = <CreateFoodInputs>req.body;
             const restaurant = await findRestaurant(user._id)
 
             if(restaurant) {
-                const createdFood = await Food.create({...body, restaurantId: restaurant._id})
+                const createdFood = await Food.create({...body, restaurantId: restaurant._id, images})
                 restaurant.foods.push(createdFood._id)
                 await restaurant.save()
 
@@ -111,3 +134,5 @@ export const getFoods = async (req: Request, res: Response, next: NextFunction) 
         next(error)
     }
 }
+
+

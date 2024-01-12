@@ -1,22 +1,17 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import { MONGO_URI } from './config/dbConnection';
-import { errorHandler } from './middlewares';
-import { apiRoute } from './routes/api.routes';
+import App from './services/ExpressApp'
+import DbConnection from './services/Database'
 
-const app = express();
 
-mongoose.connect(MONGO_URI)
-        .then(() => console.log("✅ Connection to DB Established"))
-        .catch(err => console.error(err))
+const startServer = async () => {
+    const app = express();
+    await App(app)
+    DbConnection()
 
-app.use(express.json())
+    app.listen(8000, () => {
+        console.clear();
+        console.log("✅ Connection Established")
+    })
+}
 
-app.use('/api', apiRoute)
-
-app.use(errorHandler);
-
-app.listen(8000, () => {
-    console.clear();
-    console.log("✅ Connection Established")
-})
+startServer()
