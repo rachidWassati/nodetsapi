@@ -8,7 +8,7 @@ const startServer = async () => {
     await App(app)
     DbConnection()
 
-    app.listen(8000, () => {
+    app.listen(process.env.PORT, () => {
         console.clear();
         console.log("✅ Connection Established")
     })

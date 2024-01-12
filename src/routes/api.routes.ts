@@ -1,6 +1,5 @@
 import express from 'express'
 import { v1Route } from './v1'
-import { API_VERSION } from '../config'
 
 const router = express.Router()
 
