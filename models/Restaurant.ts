@@ -15,7 +15,7 @@ interface RestaurantDoc extends Document {
     serviceAvailable: boolean;
     coverImages: [string];
     rating: number;
-    foods: [Schema.Types.ObjectId];
+    foods: [any];
 }
 
 // Je creer un schema
